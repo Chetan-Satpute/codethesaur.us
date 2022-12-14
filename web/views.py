@@ -407,11 +407,25 @@ def format_code_for_display(concept_key, lang):
     if lang.concept_unknown(concept_key) or lang.concept_code(concept_key) is None:
         return "Unknown"
     if lang.concept_implemented(concept_key):
-        return highlight(
-            lang.concept_code(concept_key),
-            get_lexer_by_name(lang.key, startinline=True),
-            HtmlFormatter()
-        )
+
+        template = """
+            <pre>
+                <code class="language-{}">{}</code>
+            </pre>
+        """
+
+        code = lang.concept(concept_key).get('code')
+
+        if isinstance(code, list):
+            code = '\n'.join(code)
+
+        return template.format(lang.key, code)
+
+        # return highlight(
+        #     lang.concept_code(concept_key),
+        #     get_lexer_by_name(lang.key, startinline=True),
+        #     HtmlFormatter()
+        # )
     return None
 
 
